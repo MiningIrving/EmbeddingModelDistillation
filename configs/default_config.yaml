@@ -1,0 +1,70 @@
+# Embedding Model Distillation Configuration
+
+# Dataset Configuration
+dataset:
+  name: "csts"
+  data_dir: "./data/csts"
+  train_file: "train.jsonl"  
+  dev_file: "dev.jsonl"
+  test_file: "test.jsonl"
+  max_length: 512
+  batch_size: 32
+  num_workers: 4
+
+# Model Configuration
+models:
+  teacher:
+    name: "qzhou-embedding"
+    model_name_or_path: "Qwen/Qwen2.5-7B-Instruct"  # Using available model as placeholder
+    max_length: 512
+    device: "auto"
+  
+  student:
+    name: "qwen3-embedding-4b"
+    model_name_or_path: "Qwen/Qwen2.5-3B-Instruct"  # Using available model as placeholder
+    max_length: 512
+    device: "auto"
+
+# Training Configuration
+training:
+  output_dir: "./output"
+  num_epochs: 5
+  learning_rate: 2e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  gradient_accumulation_steps: 1
+  max_grad_norm: 1.0
+  save_steps: 1000
+  eval_steps: 500
+  logging_steps: 100
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_spearman"
+  greater_is_better: true
+  dataloader_drop_last: false
+  dataloader_num_workers: 4
+  remove_unused_columns: false
+  fp16: true
+  seed: 42
+
+# Distillation Configuration  
+distillation:
+  temperature: 4.0
+  alpha: 0.7  # Weight for distillation loss
+  beta: 0.3   # Weight for ground truth loss
+  loss_type: "mse"  # mse, kl_div, cosine
+  
+# Evaluation Configuration
+evaluation:
+  metrics: ["spearman", "pearson", "accuracy"]
+  eval_batch_size: 64
+
+# Logging Configuration
+logging:
+  log_level: "INFO"
+  log_dir: "./logs"
+  wandb:
+    enabled: false
+    project: "embedding-distillation"
+    entity: null
+    name: null
