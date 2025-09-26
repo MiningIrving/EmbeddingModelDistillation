@@ -1,0 +1,2 @@
+# EmbeddingModelDistillation
+使用开源中文数据集蒸馏现有嵌入模型，来提高模型效率
